@@ -1,49 +1,49 @@
 pipeline{
     agent any
     tools{
-        maven 'maven-3.9'
+        maven 'apacheMaven'
     }
     stages{
-        stage('checkout the code'){
+        stage('Git Checkout'){
             steps{
-                git url:'https://github.com/bcreddydevops/chinna-app.git', branch: 'main'
+                git url:'https://github.com/Semir-Devops/CICD-Jenkins', branch: 'main'
             }
         }
-        stage('build the code'){
+        stage('Maven build'){
             steps{
                 sh 'mvn clean package'
             }
         }
-        stage('Upload War file to Nexus'){
+        stage('Integrate Nexus'){
             steps{
              nexusArtifactUploader artifacts: [
                  [
-                     artifactId: 'devops', 
+                     artifactId: 'helloWorld', 
                      classifier: '', 
-                     file: 'target/hiring.war', 
+                     file: 'target/helloWorld.war', 
                      type: 'war'
                 ]
             ], 
             credentialsId: 'nexus-credentials', 
             groupId: 'in.javahome', 
-            nexusUrl: '52.90.34.45:8081', 
+            nexusUrl: '52.60.172.238:8081', 
             nexusVersion: 'nexus3', 
             protocol: 'http', 
-            repository: 'spring-initial', 
+            repository: 'helloWorld-app', 
             version: '0.0.1'
             }
         }
-		stage('Deploy War file to Tommcat'){
-            steps{
-               sshagent(['tomcat-credentials']) {
-                  sh """
-                    scp -o StrictHostKeyChecking=no target/*.war ubuntu@54.173.252.57:/opt/apache-tomcat-9.0.72/webapps
-                    ssh -o StrictHostKeyChecking=no ubuntu@54.173.252.57 /opt/apache-tomcat-9.0.72/bin/shutdown.sh
-                    ssh -o StrictHostKeyChecking=no ubuntu@54.173.252.57 /opt/apache-tomcat-9.0.72/bin/startup.sh
-					
-		          """          
-               }
+        stage('Integrate Tomcat'){
+            steps {
+                sshagent(['tomcat-credentials']){
+                    sh """
+                        scp -o StrictHostKeyChecking=no target/*.war ubuntu@99.79.180.80:/opt/apachetomcat/webapps
+                        ssh -o StrictHostKeyChecking=no ubuntu@99.79.180.80 /opt/apachetomcat/bin/shutdown.sh
+                        ssh -o StrictHostKeyChecking=no ubuntu@99.79.180.80 /opt/apachetomcat/bin/startup.sh
+			    		
+		             """   
+                }
             }
         }
-    }   
- }
+    }
+}
