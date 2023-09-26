@@ -10,3 +10,5 @@ The servers are run on AWS EC2 instances & the pipeline is written in the Groovy
 
 The running Build on Jenkins:
 
+
+![Jenkinsbuild](https://github.com/Semir-Devops/CICD-Jenkins/assets/144611511/22f3b73c-1aab-4b85-9f34-ec778644dca7)
